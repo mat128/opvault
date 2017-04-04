@@ -19,7 +19,7 @@ from opvault import exceptions
 from opvault import designation_types
 import sys
 import getpass
-
+import json
 
 def main():
     def usage():
@@ -40,6 +40,9 @@ def main():
             raise exceptions.OpvaultException('MultipleUsernamesFound', except_msg)
 
         return usernames[0]
+
+    def get_details(title):
+        return vault.get_item(title)
 
     def get_password(title):
         overview, details = vault.get_item(title)
@@ -80,9 +83,9 @@ def main():
             for x in items:
                 print(x)
         else:
-            item_password = get_password(title)
-            print('\nUsername: {0}'.format(get_username(title)))
-            print('\nPassword: {0}'.format(item_password))
+            overview, details = get_details(title)
+
+            print(json.dumps({"overview": overview, "details": details}))
 
     except exceptions.OpvaultException as e:
         # Ooops, could possibly not decrypt/decode vault
