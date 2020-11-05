@@ -1,9 +1,8 @@
 # Python library to read data from 1Password's OPVault databases
 
 ## Prerequisites
-* Python >= 2.7
+* Recent python (3.9?)
 * Have a 1Password database
-* Install Python dependencies (PyCrypto)
 
 ## Example
 ### Sample run.py

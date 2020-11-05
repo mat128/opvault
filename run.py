@@ -17,6 +17,7 @@ from __future__ import print_function
 from opvault.onepass import OnePass
 from opvault import exceptions
 from opvault import designation_types
+import os
 import sys
 import getpass
 import json
@@ -73,8 +74,7 @@ def main():
 
     try:
         # Unlocking vault
-        master_password = getpass.getpass(prompt='1Password master password: ')
-        vault.unlock(master_password=master_password)
+        vault.unlock(master_password=os.environ.get('PASSWORD'))
 
         # Load all items (not details) and return match for 'title'
         vault.load_items()
@@ -82,6 +82,11 @@ def main():
             items = vault.getItems()
             for x in items:
                 print(x)
+        elif title == '-f':
+            entries = []
+            for (title, item) in [(title, vault._items[uuid]) for (title, uuid) in vault._item_index.items() if title.startswith(sys.argv[3])]:
+                entries.append({'overview': vault.item_overview(item), 'details': vault.item_detail(item)})
+            print(json.dumps(entries))
         else:
             overview, details = get_details(title)
 
